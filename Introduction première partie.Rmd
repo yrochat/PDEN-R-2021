@@ -1,0 +1,838 @@
+---
+title: "Introduction à R"
+subtitle: "Première partie"
+author: "Yannick Rochat (yannick.rochat@epfl.ch)"
+date: "5 mai 2021"
+output:
+    ioslides_presentation:
+    mathjax: local
+    self_contained: no
+---
+
+## Le plan du cours
+
+Première partie
+
+* Introduction à R
+* Bonnes pratiques dans la gestion, le traitement et la publication des données de la recherche
+
+Deuxième partie
+
+* Tableaux de données
+* Importation de données
+
+Troisième partie 
+
+* Visualisation de données
+
+Quatrième partie
+
+* Visualisation interactive de données
+
+
+## Introduction à R (première partie)
+
+* Qu'est-ce que R ? 
+* Qu'est-ce que RStudio ?
+* Des ressources utiles
+* Qu'est-ce qu'un notebook ?
+* Qu'est-ce qu'un package ?
+* Comment installer un package ?
+* Les premières opérations
+
+
+## Qu'est-ce que R ? 
+
+R est un langage de programmation ainsi qu'un logiciel prévu à l'origine pour faire de l'analyse statistique sur Mac sur la base du langage propriétaire S.
+
+Il a rapidement eu du succès, jusqu'à devenir un langage de référence aujourd'hui.
+
+---
+
+R peut par exemple être lancé dans un terminal.
+
+Mais R désigne également une interface de programmation que l'on nomme R GUI, "GUI" signifiant "Graphical User Interface".
+
+R GUI est un logiciel libre.
+
+
+## Qu'est-ce que RStudio ?
+
+RStudio est un environnement permettant de programmer en R, c'est-à-dire un peu plus qu'une simple interface graphique.
+
+---
+
+En plus d'afficher une console (en bas à gauche, là où le code est exécuté) et une fenêtre de script (en haut à gauche, là où l'on rédige le code que l'on veut réutiliser), RStudio permet par exemple de connaître en tout temps les variables enregistrées en mémoire, ou encore d'utiliser un notebook tel que celui-ci.
+
+
+## Des ressources 
+
+**Introduction à R et au tidyverse** de Julien Barnier
+
+https://juba.github.io/tidyverse
+
+**R for Data Science** de Garrett Grolemund & Hadley Wickham
+
+http://r4ds.had.co.nz/
+
+**Les cheatsheets de RStudio**
+
+https://www.rstudio.com/resources/cheatsheets/
+
+## Obtenir de l'aide
+
+… quand on connaît le nom de la fonction.
+
+```{r eval = FALSE}
+## La page d'aide d'une variable
+help(exp)                     
+
+## Donne le même résultat :
+?exp                          
+```
+
+La touche de tabulation peut être très utile ici lorsqu'on connaît les premières lettres d'une fonction.
+
+---
+
+… quand on ne connaît pas le nom de la fonction mais seulement celui de la méthode.
+
+```{r eval = FALSE}
+## Chercher dans les pages d'aide
+help.search("linear model")   
+
+## Donne le même résultat :
+??"linear model"   
+```
+
+
+---
+
+Dans ce notebook comme dans les scripts que vous trouverez en ligne, les fonctions sortent du chapeau comme si de rien n'était.
+
+Ne pas se faire d'illusions: 
+
+* Il a d'abord fallu découvrir leur existence.
+* Puis comprendre leur fonctionnement.
+* Le plus souvent en faisant des erreurs au passage.
+
+---
+
+C'est pour cette raison qu'il ne faut **jamais** hésiter à faire une recherche 
+
+* dans les pages d'aide de R
+  + avec `?` lorsqu'on connaît la fonction.
+  + avec `??` lorsqu'on ne la connaît pas.
+* en ligne 
+  + sur stackoverflow
+  + sur un moteur de recherche
+  
+---
+
+### Autres ressources en ligne (veille)
+
+* Sur Twitter, le hashtag #Rstats
+* Sur R-blogger, un agrégateur de blogs dont le thème est le langage R https://www.r-bloggers.com/
+* Sur les mailing lists https://www.r-project.org/mail.html 
+
+
+## L'espace de travail
+
+Qu'est-ce que l'espace de travail ?
+
+Où s'affiche-t-il ?
+
+Comment le gérer ?
+
+Comment le modifier ?
+
+
+## Qu'est-ce qu'un notebook ?
+
+Un notebook permet de présenter une analyse incluant autant du texte que du code et des résultats.
+
+Cette démarche offre de la transparence et permet en particulier la transmission de méthodes et la réplicabilité de la recherche.
+
+Les exportations sont possibles vers différents formats.
+
+
+## Qu'est-ce qu'un package ?
+
+Un package est un ensemble de fonctions réunies souvent autour d'une thématique.
+
+----
+
+Un package doit tout d'abord être installé avec la fonction `install.packages` avant d'être chargé avec la fonction `library`.
+
+Un package doit être installé pour pouvoir être chargé. Il n'y a besoin de faire cette étape qu'une fois, à moins d'une mise à jour.
+
+Un package que l'on souhaite utiliser doit être chargé à chaque utilisation de R.
+
+Un certain nombre de packages sont installés et chargés d'office lorsque R est lancé pour la première fois.
+
+---- 
+
+Toutes les fonctions du package `base`.
+
+```{r eval = FALSE}
+help(package="base")
+```
+
+----
+
+On peut explorer les packages par exemple à travers les *task views*.
+
+https://cran.r-project.org/web/views/
+
+----
+
+La gestion des packages peut se faire également avec l'onglet "Packages" dans la fenêtre en bas à droite de RStudio.
+
+Par exemple, plus tard dans ce cours, nous utiliserons le package `rmarkdown` pour manipuler des notebooks, ou `ggplot2` pour réaliser des visualisations de données.
+
+
+## Les premières opérations
+
+
+```{r}
+## Une simple addition
+4 + 3         
+```
+
+----
+
+```{r}
+## Priorité des opérations
+2^2 + 3*4     
+
+```
+
+
+----
+
+```{r}
+## Sauvegarde d'une valeur dans une variable
+z <- 12.5
+z
+```
+
+---
+
+Addition de deux variables
+
+```{r}
+x <- 12.5
+y <- 7.5
+x + y
+```
+
+----
+
+### Enregistrer un vecteur
+
+```{r}
+a <- c(4, 5, 3)
+a
+```
+
+----
+
+### Les classes
+
+* "character"
+* "complex"
+* "double"
+* "expression"
+* "integer"
+* "list"
+* "logical"
+* "numeric"
+* "vector"
+* "function"
+* etc.
+
+----
+
+### Chaînes de caractères
+
+Les chaînes de caractères sont des assemblages de symboles.
+
+```{r}
+b <- "introduction"
+b
+```
+
+----
+
+Il existe de nombreuses fonctions pour les manipuler. 
+
+Par exemple pour connaître leur longueur.
+
+```{r}
+nchar(b)
+```
+
+----
+
+Ou pour créer une nouvelle chaîne à partir de deux autres.
+
+```{r}
+c <- "à R"
+paste(b, c)
+```
+
+----
+
+### Tableau de données
+
+Les tableaux de données sont un type d'objets parmi les plus utilisés sur R.
+
+Un tableau de données -- un *data frame* -- contient en colonnes des variables pouvant être de plusieurs types (numériques, ordinales, catégorielles, logique, etc.) et en ligne les observations.
+
+----
+
+Par exemple,
+
+```{r}
+df <- data.frame(age = c(10, 11, 9), 
+        nom = c("Arthur", "Béatrice", "Camille"), 
+        taille = factor(c("grand", "petit", "moyen"), 
+         levels = c("petit", "moyen", "grand")),
+        test = c(TRUE, TRUE, FALSE))
+df
+
+```
+
+----
+
+On en explore la structure avec la fonction `str`.
+
+```{r}
+str(df)
+```
+
+### Manipuler un vecteur
+
+```{r}
+a + 1 
+a*2
+log(a)
+```
+
+----
+
+### Addition et multiplication de vecteurs
+
+```{r}
+b <- c(8, 7, 10)
+a + b
+a * b
+```
+
+----
+
+### Multiplication matricielle
+
+```{r}
+a %*% b
+```
+
+----
+
+```{r}
+a %*% t(b)
+```
+
+----
+
+### Les fonctions
+
+Une fonction prédéfinie.
+
+```{r}
+y = sqrt(4)    ## Fonction racine carrée
+y
+```
+
+----
+
+
+Une fonction construite pour l'occasion.
+
+```{r}
+f <- function(x) {2*x}
+f(17)
+f(pi)
+```
+
+----
+
+### Les classes
+
+* "character"
+* "complex"
+* "double"
+* "expression"
+* "integer"
+* "list"
+* "logical"
+* "numeric"
+* "single"
+* "raw"
+* "vector"
+* "function"
+* …
+
+----
+
+Connaître la classe d'un objet.
+
+```{r}
+z <- "hello"
+class(z)                     ## Le type d'une variable
+```
+
+----
+
+La fonction `str` permet d'obtenir des informations plus complètes.
+
+```{r}
+str(z)
+```
+
+----
+
+```{r}
+vec <- c(3,5,3,7)
+str(vec)
+```
+
+----
+
+```{r}
+f <- function(x) {2*x}
+str(f)
+```
+
+----
+
+```{r}
+a <- f(17)
+str(a)
+```
+
+----
+
+### Chaînes de caractères
+
+Les chaînes de caractères sont des assemblages de symboles.
+
+```{r}
+b <- "Introduction"
+b
+```
+
+----
+
+Il existe de nombreuses fonctions pour les manipuler. 
+
+Par exemple pour connaître leur longueur.
+
+```{r}
+nchar(b)
+```
+
+----
+
+Ou pour créer une nouvelle chaîne à partir de deux autres.
+
+```{r}
+c <- "à R"
+paste(b, c)
+```
+
+----
+
+Pour manipuler du texte de manière avancée dans R (ou dans n'importe quel autre langage de programmation), il peut être nécessaire d'apprendre à manipuler des expressions régulières.
+
+----
+
+Deux tutoriaux pour R.
+
+* http://stringr.tidyverse.org/articles/regular-expressions.html
+* http://stat545.com/block022_regular-expression.html
+
+----
+
+La cheatsheet, indispensable.
+
+https://github.com/rstudio/cheatsheets/raw/master/strings.pdf
+
+----
+
+Pour tester des expressions régulières :
+
+https://regex101.com/
+
+----
+
+Quelques ressources ludiques pour s'entraîner…
+
+* https://alf.nu/RegexGolf 
+* https://regexcrossword.com/
+* https://regexone.com/
+
+----
+
+### Les éléments logiques
+
+* TRUE et FALSE
+
+Mais aussi…
+
+* NA, NaN
+* Inf
+
+----
+
+```{r}
+1/0
+```
+
+----
+
+```{r}
+x <- Inf
+x - x
+
+```
+
+
+
+"NA" signifie "Not available".
+
+"NaN" signifie "Not a Number".
+
+----
+
+
+### Les opérateurs de comparaison
+
+
+```{r error = TRUE}
+1 == 1
+1 == 2
+```
+
+---
+
+```{r}
+1 != 1 
+1 != 2
+```
+
+----
+
+```{r}
+1 < 1
+1 <= 1
+```
+
+----
+
+### Les opérateurs logiques
+
+```{r}
+a <- (1 < 2)
+a
+!a
+```
+
+----
+
+```{r}
+b <- (2 > 3)
+a & b
+a | b
+```
+
+
+
+## Les vecteurs
+
+
+```{r}
+x <- c(5, 4, 5, 6, 7, 8) 
+x
+x_char <- c("a", "b", "c") 
+x_char
+```
+
+----
+
+Accéder directement à un élément d'un vecteur
+
+```{r}
+x
+x[2]
+x[c(2, 4)]
+```
+
+---
+```{r}
+x
+x[c(-2, -4)]
+```
+
+
+----
+
+Manipuler des vecteurs
+
+```{r}
+x[6] = 10
+x
+```
+
+---
+
+```{r}
+a <- c(3, 4, 5, 6)
+a[c(2, 3)] <- 0
+a
+```
+
+---
+
+```{r}
+a[c(2, 3)] <- c(8, 7)
+a
+```
+
+----
+
+```{r}
+c(1,2,3) + c(3,4,5)
+```
+
+----
+
+```{r}
+4 * c(1,2,3)
+c(2,5) < 4
+```
+
+----
+
+Attention lorsque deux éléments ne sont pas de même taille !
+
+```{r}
+c(1,2) + c(3,4,5,6)
+```
+
+----
+
+Attention lorsque l'un n'est pas multiple de l'autre !
+
+```{r}
+c(1,2) + c(2,3,4)
+```
+
+----
+
+## Comment connaître le type d'une variable ?
+
+```{r}
+a <- 1
+b <- 1:5
+class(a)
+class(b)
+```
+
+----
+
+```{r}
+c <- "hello"
+d <- 1 > 2
+class(c)
+class(d)
+```
+
+----
+
+Quelle est la "taille" de l'objet ?
+
+```{r}
+length(a)
+length(b)
+length(c)
+length(d)
+```
+
+----
+
+### Qu'est-ce que l'environnement ?
+
+Voir la fenêtre en haut à droite.
+
+----
+
+### Manipulations de l'environnement
+
+```{r}
+## Les variables sauvées dans l'environnement de travail
+ls()    
+```
+
+----
+
+```{r}
+## On retire la variable "y"
+rm(y)   
+ls()
+```
+
+
+
+----
+
+### Exercice
+
+* Créez un vecteur avec les cinq valeurs suivantes: 5, 10, 15, 20 et 25.
+* Cherchez quelle fonction permet de calculer la moyenne («mean» en anglais) d'une distribution.
+* Calculez-la :-)
+
+
+
+## Importer des données
+
+
+### Le package `readr`
+
+À partir de là, nous allons utiliser le package `readr` pour lire et écrire des informations textuelles.
+
+Le code suivant vérifier si le package est installé sur votre machine et l'installe le cas échéant. Puis il le charge.
+
+```{r}
+if (!require(readr)) install.packages("readr")
+library(readr)
+```
+
+----
+
+* Les packages sont des ensembles de fonctions que l'on ajoute aux fonctions déjà disponibles.
+* Les fonctions d'un package ont en général été regroupées autour d'une thématique commune.
+* Dans notre cas: l'importation et l'exportation de données textuelles.
+
+----
+
+### csv (comma separated values)
+
+Ne pas oublier les guillemets `"..."` autour du nom du fichier.
+
+Pour découvrir pour quelle raison nous utilisons la fonction `read_csv2` et pas `read_csv`, consultez le fichier d'aide de ces fonctions. La réponse est dans le premier paragraphe.
+
+```{r}
+fifa <- read_csv2("data/fifa.csv")
+```
+
+----
+
+Un aperçu.
+
+```{r}
+str(fifa)
+```
+
+----
+
+Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouvez vous rendre dans la fenêtre en haut à droite de RStudio puis dans l'onglet "Environment". Vous trouverez le tableau sous "Data". En double-cliquant dessus, il s'ouvrira dans cette fenêtre et vous pourrez vérifier que le tableau a bien été importé (en particulier dans le cas de "parsing failures").
+
+----
+
+Il est également possible d'afficher le tableau assez élégament dans le notebook.
+
+```{r}
+fifa
+```
+
+----
+
+Pour sauver un fichier au format csv, il faut utiliser la fonction `write_csv`
+
+```{r}
+system("mkdir outputs")
+write_csv(fifa, "outputs/fifa.csv")
+```
+
+---- 
+
+#### xls (Microsoft Excel/libreOffice/Google Spreadsheets)
+
+* On préfère en général sauver les fichiers au format csv car ils sont ainsi beaucoup plus légers et ne transportent pas l'encodage parfois lourd d'un fichier xls.
+* Néanmoins, ce n'est pas toujours possible d'y échapper. Les données de l'OFS par exemple sont souvent fournies au format xls.
+
+----
+
+`readxl` est un package qui permet d'importer (et d'exporter) des fichiers au format xls.
+
+```{r}
+if (!require(readxl)) install.packages("readxl")
+library(readxl)
+```
+
+---- 
+
+Prenons un fichier au hasard de l'OFS : "Comportement de la population en matière de transport, chiffres clés - agglomération de Lausanne (définition 2000)"
+
+https://www.bfs.admin.ch/bfs/fr/home/statistiques/catalogues-banques-donnees/tableaux.assetdetail.2082350.html
+
+Il est présent dans le dossier `data`.
+
+----
+
+La fonction `read_excel` est ce qu'il nous faut.
+
+```{r}
+ouch <- read_excel("data/su-f-11.04.03-MZ-2015-A2_5586_Def2000.xls")
+ouch
+```
+
+----
+
+Toutes les entrées sont considérées comme des chaînes de caractères.
+
+```{r}
+str(ouch)
+```
+
+----
+
+Le résultat n'est pas directement exploitable, et ce sera souvent le cas au moment de récupérer des fichiers publics, souvent bizarrement structurés.
+
+----
+
+Important : les fonctions utilisées traditionnellement pour importer des tableaux (par ex. `read.table`) importent par défaut les variables au format "factor", un concept spécifique à R et aux langages prévus pour faire des statistiques. Ce format s'emploie principalement lorsqu'une variable est catégorielle ordinale, c'est-à-dire que les valeurs qu'elle peut prendre sont parmi un ensemble de "mots" (catégorielle) et qu'on peut les classer (ordinale), par exemple l'ensemble : "très mauvais", "mauvais", "bon", "très bon". 
+
+Pour obtenir ce résultat, il faut utiliser (quand elle est disponible) l'option `stringsAsFactors = TRUE` qui est généralement vraie («`TRUE`») par défaut.
+
+----
+
+Le même genre de technique peut être utilisé pour lire des fichiers aux formats suivants.
+
+but | fonction 
+-------------|-------------
+pur texte | `read_file`, `read_lines`
+png | `readPNG`
+spss | package `haven`
+json | package `jsonlite`
+xml | package `xml2`
+
+
+
+
+
+
+
+
+
