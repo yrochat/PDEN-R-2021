@@ -1,0 +1,756 @@
+---
+title: "Introduction à R"
+subtitle: "Deuxième partie"
+author: "Yannick Rochat (yannick.rochat@epfl.ch)"
+date: "12 mai 2021"
+output:
+    html_document:
+    ioslides_presentation:
+    mathjax: local
+    self_contained: no
+---
+
+## Le plan du cours
+
+* Opérations de base 
+    * Calcul
+    * Chaînes de caractères
+    * Variables
+    * Fonctions
+* Tableaux de données (data frames)
+    * Créer
+    * Décrire
+    * Accéder
+    * Manipuler
+    * Importer/Exporter
+
+
+
+
+## Les premières opérations
+
+Notez le commentaire, que l'on place après un `#`.
+
+```{r}
+## Une simple addition
+4 + 3         
+```
+
+----
+
+```{r}
+## Priorité des opérations
+2^2 + 3*4     
+
+```
+
+
+----
+
+```{r}
+## Sauvegarde d'une valeur dans une variable
+z <- 12.5
+z
+```
+
+---
+
+Addition de deux variables
+
+```{r}
+x <- 12.5
+y <- 7.5
+x + y
+```
+
+----
+
+### Enregistrer un vecteur
+
+```{r}
+a <- c(4, 5, 3)
+a
+```
+
+----
+
+### Les classes
+
+* "character"
+* "complex"
+* "double"
+* "expression"
+* "integer"
+* "list"
+* "logical"
+* "numeric"
+* "vector"
+* "function"
+* etc.
+
+----
+
+### Chaînes de caractères
+
+Les chaînes de caractères sont des assemblages de symboles.
+
+```{r}
+b <- "introduction"
+b
+```
+
+----
+
+Il existe de nombreuses fonctions pour les manipuler. 
+
+Par exemple pour connaître leur longueur.
+
+```{r}
+nchar(b)
+```
+
+----
+
+Ou pour créer une nouvelle chaîne à partir de deux autres.
+
+```{r}
+c <- "à R"
+paste(b, c)
+```
+
+----
+
+
+### Manipuler un vecteur
+
+```{r}
+a + 1 
+a*2
+log(a)
+```
+
+----
+
+### Addition et multiplication de vecteurs
+
+```{r}
+b <- c(8, 7, 10)
+a + b
+a * b
+```
+
+----
+
+### Multiplication matricielle
+
+```{r}
+a %*% b
+```
+
+----
+
+```{r}
+b
+```
+
+Transposition :
+
+```{r}
+t(b)
+```
+
+----
+
+```{r}
+a %*% t(b)
+```
+
+----
+
+### Les fonctions
+
+Une fonction prédéfinie.
+
+```{r}
+y = sqrt(4)    ## Fonction racine carrée
+y
+```
+
+----
+
+
+Une fonction construite pour l'occasion.
+
+```{r}
+f <- function(x) {2*x}
+f(17)
+f(pi)
+```
+
+----
+
+### Les classes
+
+* "character"
+* "complex"
+* "double"
+* "expression"
+* "integer"
+* "list"
+* "logical"
+* "numeric"
+* "single"
+* "raw"
+* "vector"
+* "function"
+* …
+
+----
+
+Connaître la classe d'un objet.
+
+```{r}
+z <- "hello"
+class(z)                    
+```
+
+----
+
+La fonction `str` permet d'obtenir des informations plus complètes.
+
+```{r}
+str(z)
+```
+
+----
+
+```{r}
+vec <- c(3,5,3,7)
+str(vec)
+```
+
+----
+
+Parfois `class`, qui donne moins d'informations, est plus appropriée.
+
+```{r}
+f <- function(x) {2*x}
+str(f)
+```
+
+```{r}
+class(f)
+```
+
+----
+
+```{r}
+a <- f(17)
+str(a)
+```
+
+----
+
+### Chaînes de caractères
+
+Les chaînes de caractères sont des assemblages de symboles.
+
+```{r}
+b <- "Introduction"
+b
+```
+
+----
+
+Il existe de nombreuses fonctions pour les manipuler. 
+
+Par exemple pour connaître leur longueur.
+
+```{r}
+nchar(b)
+```
+
+----
+
+Ou pour créer une nouvelle chaîne à partir de deux autres.
+
+```{r}
+c <- "à R"
+paste(b, c)
+```
+
+----
+
+Pour manipuler du texte *de manière avancée* dans R (ou dans n'importe quel autre langage de programmation), il peut être nécessaire d'apprendre à manipuler des expressions régulières ("regular expressions").
+
+----
+
+Deux tutoriaux pour R.
+
+* http://stringr.tidyverse.org/articles/regular-expressions.html
+* http://stat545.com/block022_regular-expression.html
+
+----
+
+La cheatsheet, indispensable.
+
+https://github.com/rstudio/cheatsheets/raw/master/strings.pdf
+
+----
+
+Pour tester des expressions régulières :
+
+https://regex101.com/
+
+----
+
+Quelques ressources ludiques pour s'entraîner…
+
+* https://alf.nu/RegexGolf 
+* https://regexcrossword.com/
+* https://regexone.com/
+
+----
+
+### Les éléments logiques
+
+* TRUE et FALSE
+
+Mais aussi…
+
+* NA, NaN
+* Inf
+
+----
+
+```{r}
+1/0
+```
+
+----
+
+```{r}
+x <- Inf
+x - x
+
+```
+
+
+
+"NA" signifie "Not available".
+
+"NaN" signifie "Not a Number".
+
+----
+
+
+### Les opérateurs de comparaison
+
+
+```{r error = TRUE}
+1 == 1
+1 == 2
+```
+
+---
+
+```{r}
+1 != 1 
+1 != 2
+```
+
+----
+
+```{r}
+1 < 1
+1 <= 1
+```
+
+----
+
+### Les opérateurs logiques
+
+```{r}
+a <- (1 < 2)
+a
+!a
+```
+
+----
+
+```{r}
+b <- (2 > 3)
+a & b
+a | b
+```
+
+
+
+## Les vecteurs
+
+
+```{r}
+x <- c(5, 4, 5, 6, 7, 8) 
+x
+x_char <- c("a", "b", "c") 
+x_char
+```
+
+----
+
+Accéder directement à un élément d'un vecteur
+
+```{r}
+x
+x[2]
+x[c(2, 4)]
+```
+
+---
+```{r}
+x
+x[c(-2, -4)]
+```
+
+
+----
+
+Manipuler des vecteurs
+
+```{r}
+x[6] = 10
+x
+```
+
+---
+
+```{r}
+a <- c(3, 4, 5, 6)
+a[c(2, 3)] <- 0
+a
+```
+
+---
+
+```{r}
+a[c(2, 3)] <- c(8, 7)
+a
+```
+
+----
+
+```{r}
+c(1,2,3) + c(3,4,5)
+```
+
+----
+
+```{r}
+4 * c(1,2,3)
+c(2,5) < 4
+```
+
+----
+
+Attention lorsque deux éléments ne sont pas de même taille !
+
+```{r}
+c(1,2) + c(3,4,5,6)
+```
+
+----
+
+Attention lorsque l'un n'est pas multiple de l'autre !
+
+```{r}
+c(1,2) + c(2,3,4)
+```
+
+
+## Comment connaître le type d'une variable ?
+
+```{r}
+a <- 1
+b <- 1:5
+class(a)
+class(b)
+```
+
+----
+
+```{r}
+c <- "hello"
+d <- 1 > 2
+class(c)
+class(d)
+```
+
+----
+
+Quelle est la "taille" de l'objet ?
+
+```{r}
+length(a)
+length(b)
+length(c)
+length(d)
+```
+
+
+----
+
+### Exercice
+
+* Créez un vecteur avec les cinq valeurs suivantes: 5, 10, 15, 20 et 25.
+* Cherchez quelle fonction permet de calculer la moyenne («mean» en anglais) d'une distribution.
+* Calculez-la :-)
+
+D'autres exercices sont disponibles ici : https://juba.github.io/tidyverse/02-prise_en_main.html
+
+----
+
+### Tableau de données
+
+Les tableaux de données sont un type d'objets parmi les plus utilisés sur R.
+
+Un tableau de données -- un *data frame* -- contient en colonnes des variables pouvant être de plusieurs types (numériques, ordinales, catégorielles, logique, etc.) et en ligne les observations.
+
+----
+
+Par exemple,
+
+```{r}
+df <- data.frame(age = c(10, 11, 9), 
+        nom = c("Arthur", "Béatrice", "Camille"), 
+        taille = factor(c("grande", "petite", "moyenne"), 
+         levels = c("petite", "moyenne", "grande")),
+        note = c(3, 4, 5))
+df
+
+```
+
+----
+
+On en explore la structure avec la fonction `str`.
+
+```{r}
+str(df)
+```
+
+----
+
+### Créer une nouvelle variable 
+
+Qui a passé le test ? (Seuil minimum = 4)
+
+```{r}
+df$test <- df$note >= 4
+```
+
+----
+
+### Créer une nouvelle variable 
+
+Qui a passé le test ?
+
+```{r}
+df
+```
+
+
+
+
+## Manipuler des données
+
+
+### Le package `readr` (et `questionr`)
+
+À partir de là, nous allons utiliser les packages `questionr` pour obtenir un jeu de données et `readr` pour importer et exporter des tableaux de données.
+
+Nous avons vu comment installer un package : onglet "Packages" en bas à droite > "Install" > cocher la case correspondante. 
+
+Pour le charger : onglet "Packages" en bas à droite > cocher la case correspondante.
+----
+
+* Les packages sont des ensembles de fonctions que l'on ajoute aux fonctions déjà disponibles.
+* Les fonctions d'un package ont en général été regroupées autour d'une thématique commune.
+* Dans notre cas: l'importation et l'exportation de données textuelles.
+
+----
+
+
+### Charger un jeu de données pré-enregistré
+
+```{r}
+library(questionr)
+data("hdv2003")
+```
+
+Ce choix est inspiré du toujours excellent guide de Julien Barnier, à la page https://juba.github.io/tidyverse/03-premier_travail.html#jeu-de-donn%C3%A9es-dexemple
+
+----
+
+### Description
+
+```{r}
+hdv2003
+```
+
+### Description
+
+```{r}
+str(hdv2003)
+```
+
+----
+
+### Accéder aux variables
+
+```{r}
+hdv2003$qualif
+```
+
+---
+
+### Accéder aux variables
+
+```{r}
+hdv2003[,2]
+```
+
+----
+
+### Accéder aux variables
+
+```{r}
+hdv2003$age
+```
+
+
+### Accéder aux entrées du tableau
+
+```{r}
+hdv2003[1,]
+```
+
+
+
+
+### csv (comma separated values)
+
+Ne pas oublier les guillemets `"..."` autour du nom du fichier.
+
+```{r}
+library(readr)
+write_csv(x = hdv2003, "hdv2003.csv")
+```
+
+----
+
+```{r}
+hdv <- read_csv(file = "hdv2003.csv")
+```
+
+----
+
+Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouvez vous rendre dans la fenêtre en haut à droite de RStudio puis dans l'onglet "Environment". Vous trouverez le tableau sous "Data". En double-cliquant dessus, il s'ouvrira dans cette fenêtre et vous pourrez vérifier que le tableau a bien été importé (en particulier dans le cas de "parsing failures").
+
+----
+
+
+#### xls (Microsoft Excel/libreOffice/Google Spreadsheets)
+
+* On préfère en général sauver les fichiers au format csv car ils sont ainsi beaucoup plus légers et ne transportent pas l'encodage parfois lourd d'un fichier xls.
+* Néanmoins, ce n'est pas toujours possible d'y échapper. Les données de l'OFS par exemple sont souvent fournies au format xls.
+
+----
+
+`readxl` est un package qui permet d'importer (et d'exporter) des fichiers au format xls.
+
+---- 
+
+Prenons un fichier au hasard de l'OFS : "Comportement de la population en matière de transport, chiffres clés - agglomération de Lausanne (définition 2000)"
+
+https://www.bfs.admin.ch/bfs/fr/home/statistiques/catalogues-banques-donnees/tableaux.assetdetail.2082350.html
+
+Il est présent dans le dossier `data`.
+
+----
+
+La fonction `read_excel` est ce qu'il nous faut.
+
+```{r}
+library(readxl)
+ouch <- read_excel("su-f-11.04.03-MZ-2015-A2_5586_Def2000.xls")
+ouch
+```
+
+----
+
+Toutes les entrées sont considérées comme des chaînes de caractères.
+
+```{r}
+str(ouch)
+```
+
+----
+
+Le résultat n'est pas directement exploitable, et ce sera souvent le cas au moment de récupérer des fichiers publics, souvent bizarrement structurés.
+
+----
+
+Important : les fonctions utilisées traditionnellement pour importer des tableaux (par ex. `read.table`) importent par défaut les variables au format "factor", un concept spécifique à R et aux langages prévus pour faire des statistiques. Ce format s'emploie principalement lorsqu'une variable est catégorielle ordinale, c'est-à-dire que les valeurs qu'elle peut prendre sont parmi un ensemble de "mots" (catégorielle) et qu'on peut les classer (ordinale), par exemple l'ensemble : "très mauvais", "mauvais", "bon", "très bon". 
+
+Pour obtenir ce résultat, il faut utiliser (quand elle est disponible) l'option `stringsAsFactors = TRUE` qui est généralement vraie («`TRUE`») par défaut.
+
+----
+
+Le même genre de technique peut être utilisé pour lire des fichiers aux formats suivants.
+
+but | fonction 
+-------------|-------------
+pur texte | `read_file`, `read_lines`
+png | `readPNG`
+spss | package `haven`
+json | package `jsonlite`
+xml | package `xml2`
+
+
+
+
+## Bien préparer ses données
+
+«Tidy data is a standard way of mapping the meaning of a dataset to its structure.» 
+
+«A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types.» 
+
+----
+
+«In tidy data:
+
+1. Each variable forms a column.
+2. Each observation forms a row.
+3. Each type of observational unit forms a table.»
+
+Source :
+
+```{r}
+# library(tidyr)
+# vignette("tidy-data")
+```
+
+----
+
+Marie-Louise Timcke a proposé sur `journocode.com` [une très bonne ressource à ce sujet](http://journocode.com/2016/03/05/r-tidy-data/).
+
+
+
+----
+
+Le format *tidy*, ou *long form*, est fortement recommandé dans `ggplot2`.
+
+
+
+
+
+
