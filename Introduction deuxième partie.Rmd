@@ -4,7 +4,6 @@ subtitle: "Deuxième partie"
 author: "Yannick Rochat (yannick.rochat@epfl.ch)"
 date: "12 mai 2021"
 output:
-    html_document:
     ioslides_presentation:
     mathjax: local
     self_contained: no
@@ -115,7 +114,7 @@ Ou pour créer une nouvelle chaîne à partir de deux autres.
 
 ```{r}
 c <- "à R"
-paste(b, c)
+paste(b, c) # Il colle les deux variables ensemble
 ```
 
 ----
@@ -402,7 +401,7 @@ Accéder directement à un élément d'un vecteur
 
 ```{r}
 x
-x[2]
+x[3]
 x[c(2, 4)]
 ```
 
@@ -474,6 +473,8 @@ a <- 1
 b <- 1:5
 class(a)
 class(b)
+
+1:10
 ```
 
 ----
@@ -504,6 +505,14 @@ length(d)
 * Créez un vecteur avec les cinq valeurs suivantes: 5, 10, 15, 20 et 25.
 * Cherchez quelle fonction permet de calculer la moyenne («mean» en anglais) d'une distribution.
 * Calculez-la :-)
+
+```{r}
+p <- c(5, 10, 15, 20, 25)
+
+summary(p)
+
+```
+
 
 D'autres exercices sont disponibles ici : https://juba.github.io/tidyverse/02-prise_en_main.html
 
@@ -544,6 +553,7 @@ str(df)
 Qui a passé le test ? (Seuil minimum = 4)
 
 ```{r}
+
 df$test <- df$note >= 4
 ```
 
@@ -555,202 +565,8 @@ Qui a passé le test ?
 
 ```{r}
 df
+
+df[order(df$taille),]
 ```
-
-
-
-
-## Manipuler des données
-
-
-### Le package `readr` (et `questionr`)
-
-À partir de là, nous allons utiliser les packages `questionr` pour obtenir un jeu de données et `readr` pour importer et exporter des tableaux de données.
-
-Nous avons vu comment installer un package : onglet "Packages" en bas à droite > "Install" > cocher la case correspondante. 
-
-Pour le charger : onglet "Packages" en bas à droite > cocher la case correspondante.
-----
-
-* Les packages sont des ensembles de fonctions que l'on ajoute aux fonctions déjà disponibles.
-* Les fonctions d'un package ont en général été regroupées autour d'une thématique commune.
-* Dans notre cas: l'importation et l'exportation de données textuelles.
-
-----
-
-
-### Charger un jeu de données pré-enregistré
-
-```{r}
-library(questionr)
-data("hdv2003")
-```
-
-Ce choix est inspiré du toujours excellent guide de Julien Barnier, à la page https://juba.github.io/tidyverse/03-premier_travail.html#jeu-de-donn%C3%A9es-dexemple
-
-----
-
-### Description
-
-```{r}
-hdv2003
-```
-
-### Description
-
-```{r}
-str(hdv2003)
-```
-
-----
-
-### Accéder aux variables
-
-```{r}
-hdv2003$qualif
-```
-
----
-
-### Accéder aux variables
-
-```{r}
-hdv2003[,2]
-```
-
-----
-
-### Accéder aux variables
-
-```{r}
-hdv2003$age
-```
-
-
-### Accéder aux entrées du tableau
-
-```{r}
-hdv2003[1,]
-```
-
-
-
-
-### csv (comma separated values)
-
-Ne pas oublier les guillemets `"..."` autour du nom du fichier.
-
-```{r}
-library(readr)
-write_csv(x = hdv2003, "hdv2003.csv")
-```
-
-----
-
-```{r}
-hdv <- read_csv(file = "hdv2003.csv")
-```
-
-----
-
-Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouvez vous rendre dans la fenêtre en haut à droite de RStudio puis dans l'onglet "Environment". Vous trouverez le tableau sous "Data". En double-cliquant dessus, il s'ouvrira dans cette fenêtre et vous pourrez vérifier que le tableau a bien été importé (en particulier dans le cas de "parsing failures").
-
-----
-
-
-#### xls (Microsoft Excel/libreOffice/Google Spreadsheets)
-
-* On préfère en général sauver les fichiers au format csv car ils sont ainsi beaucoup plus légers et ne transportent pas l'encodage parfois lourd d'un fichier xls.
-* Néanmoins, ce n'est pas toujours possible d'y échapper. Les données de l'OFS par exemple sont souvent fournies au format xls.
-
-----
-
-`readxl` est un package qui permet d'importer (et d'exporter) des fichiers au format xls.
-
----- 
-
-Prenons un fichier au hasard de l'OFS : "Comportement de la population en matière de transport, chiffres clés - agglomération de Lausanne (définition 2000)"
-
-https://www.bfs.admin.ch/bfs/fr/home/statistiques/catalogues-banques-donnees/tableaux.assetdetail.2082350.html
-
-Il est présent dans le dossier `data`.
-
-----
-
-La fonction `read_excel` est ce qu'il nous faut.
-
-```{r}
-library(readxl)
-ouch <- read_excel("su-f-11.04.03-MZ-2015-A2_5586_Def2000.xls")
-ouch
-```
-
-----
-
-Toutes les entrées sont considérées comme des chaînes de caractères.
-
-```{r}
-str(ouch)
-```
-
-----
-
-Le résultat n'est pas directement exploitable, et ce sera souvent le cas au moment de récupérer des fichiers publics, souvent bizarrement structurés.
-
-----
-
-Important : les fonctions utilisées traditionnellement pour importer des tableaux (par ex. `read.table`) importent par défaut les variables au format "factor", un concept spécifique à R et aux langages prévus pour faire des statistiques. Ce format s'emploie principalement lorsqu'une variable est catégorielle ordinale, c'est-à-dire que les valeurs qu'elle peut prendre sont parmi un ensemble de "mots" (catégorielle) et qu'on peut les classer (ordinale), par exemple l'ensemble : "très mauvais", "mauvais", "bon", "très bon". 
-
-Pour obtenir ce résultat, il faut utiliser (quand elle est disponible) l'option `stringsAsFactors = TRUE` qui est généralement vraie («`TRUE`») par défaut.
-
-----
-
-Le même genre de technique peut être utilisé pour lire des fichiers aux formats suivants.
-
-but | fonction 
--------------|-------------
-pur texte | `read_file`, `read_lines`
-png | `readPNG`
-spss | package `haven`
-json | package `jsonlite`
-xml | package `xml2`
-
-
-
-
-## Bien préparer ses données
-
-«Tidy data is a standard way of mapping the meaning of a dataset to its structure.» 
-
-«A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types.» 
-
-----
-
-«In tidy data:
-
-1. Each variable forms a column.
-2. Each observation forms a row.
-3. Each type of observational unit forms a table.»
-
-Source :
-
-```{r}
-# library(tidyr)
-# vignette("tidy-data")
-```
-
-----
-
-Marie-Louise Timcke a proposé sur `journocode.com` [une très bonne ressource à ce sujet](http://journocode.com/2016/03/05/r-tidy-data/).
-
-
-
-----
-
-Le format *tidy*, ou *long form*, est fortement recommandé dans `ggplot2`.
-
-
-
-
 
 
