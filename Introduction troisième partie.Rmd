@@ -1,5 +1,6 @@
 ---
-title: "Introduction à R (troisième partie)"
+title: "Introduction à R"
+subtitle: "Troisième partie"
 author: "Yannick Rochat (yannick.rochat@epfl.ch)"
 date: "19 mai 2021"
 output:
@@ -27,6 +28,7 @@ output:
 Nous avons vu comment installer un package : onglet "Packages" en bas à droite > "Install" > cocher la case correspondante. 
 
 Pour le charger : onglet "Packages" en bas à droite > cocher la case correspondante.
+
 ----
 
 * Les packages sont des ensembles de fonctions que l'on ajoute aux fonctions déjà disponibles.
@@ -39,6 +41,7 @@ Pour le charger : onglet "Packages" en bas à droite > cocher la case correspond
 ### Charger un jeu de données pré-enregistré
 
 ```{r}
+library(tidyr)
 library(questionr)
 data("hdv2003")
 ```
@@ -83,6 +86,7 @@ hdv2003[,2]
 hdv2003$age
 ```
 
+----
 
 ### Accéder aux entrées du tableau
 
@@ -90,10 +94,12 @@ hdv2003$age
 hdv2003
 ```
 
+----
 
 
+### Exporter des données (csv)
 
-### csv (comma separated values)
+csv = "comma separated values"
 
 Ne pas oublier les guillemets `"..."` autour du nom du fichier.
 
@@ -103,6 +109,8 @@ write_csv(x = hdv2003, "hdv2003.csv")
 ```
 
 ----
+
+### Importer des données (csv)
 
 ```{r}
 hdv <- read_csv(file = "hdv2003.csv")
@@ -115,7 +123,9 @@ Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouv
 ----
 
 
-#### xls (Microsoft Excel/libreOffice/Google Spreadsheets)
+### Importer des données (xls)
+
+xls (Microsoft Excel/libreOffice/Google Spreadsheets)
 
 * On préfère en général sauver les fichiers au format csv car ils sont ainsi beaucoup plus légers et ne transportent pas l'encodage parfois lourd d'un fichier xls.
 * Néanmoins, ce n'est pas toujours possible d'y échapper. Les données de l'OFS par exemple sont souvent fournies au format xls.
@@ -130,7 +140,7 @@ Prenons un fichier au hasard de l'OFS : "Comportement de la population en matiè
 
 https://www.bfs.admin.ch/bfs/fr/home/statistiques/catalogues-banques-donnees/tableaux.assetdetail.2082350.html
 
-Il est présent dans le dossier `data`.
+Il est présent dans le dossier.
 
 ----
 
@@ -139,6 +149,11 @@ La fonction `read_excel` est ce qu'il nous faut.
 ```{r}
 library(readxl)
 ouch <- read_excel("su-f-11.04.03-MZ-2015-A2_5586_Def2000.xls")
+```
+
+----
+
+```{r}
 ouch
 ```
 
@@ -194,16 +209,16 @@ xml | package `xml2`
 
 Source :
 
-```{r}
-# library(tidyr)
-# vignette("tidy-data")
+```{r eval = FALSE}
+library(tidyr)
+vignette("tidy-data")
 ```
 
 ----
 
-Marie-Louise Timcke a proposé sur `journocode.com` [une très bonne ressource à ce sujet](http://journocode.com/2016/03/05/r-tidy-data/).
+Marie-Louise Timcke a proposé sur `journocode.com` [une très bonne ressource à ce sujet](https://web.archive.org/web/20170212185744/http://journocode.com/2016/03/05/r-tidy-data/).
 
-En particulier, elle présente l'exemple suivant, extrait d'explications d'Hadley Wickham.
+En particulier, elle présente l'exemple suivant, conçu à partir d'explications d'Hadley Wickham.
 
 
 ----
@@ -225,14 +240,14 @@ http://www.springer.com/us/book/9780387245447
 
 ## Setup. 
 
+Charger (et si nécessaire installer) les packages `ggplot2` et `RColorBrewer`
+
 ```{r}
-if (!require(ggplot2)) install.packages("ggplot2")
 library(ggplot2)
-if (!require(RColorBrewer)) install.packages("RColorBrewer")
 library(RColorBrewer)
 ```
 
-----
+
 
 ```{r, echo = FALSE}
 # Indispensable pour exporter le notebook/les slides sans message d'erreur !?
@@ -266,7 +281,7 @@ str(diamonds)
 
 ----
 
-On ne va garder qu'une entrée sur dix de ce jeu de données afin de rendre les calculs plus rapides et les graphiques moins chargés.
+On ne va garder qu'un échantillon de mille observations tirées de ce jeu de données afin de rendre les calculs plus rapides et les graphiques moins chargés.
 
 ```{r}
 diam <- diamonds[sample(1:nrow(diamonds), 1000),]
@@ -1062,13 +1077,7 @@ ggplot(diam, aes(x = carat, y = price, color = clarity)) +
   theme_minimal()
 ```
 
-## Sauver un graphique
-
-```{r}
-ggsave
-```
-
-----
+## Pour exporter un graphique : `ggsave`
 
 Par exemple 
 
