@@ -4,9 +4,7 @@ subtitle: "Troisième partie"
 author: "Yannick Rochat (yannick.rochat@epfl.ch)"
 date: "19 mai 2021"
 output:
-    ioslides_presentation:
-    mathjax: local
-    self_contained: no
+    html_document
 ---
 
 ## Le plan du cours
@@ -20,14 +18,32 @@ output:
 
 ## Manipuler des données
 
+---
+
 
 ### Le package `readr` (et `questionr`)
 
 À partir de là, nous allons utiliser les packages `questionr` pour obtenir un jeu de données et `readr` pour importer et exporter des tableaux de données.
 
-Nous avons vu comment installer un package : onglet "Packages" en bas à droite > "Install" > cocher la case correspondante. 
+---
 
-Pour le charger : onglet "Packages" en bas à droite > cocher la case correspondante.
+### Installer un package
+
+Nous avons vu comment installer un package. 
+
+Pour rappel, il faut aller dans l'onglet "Packages" de la fenêtre en bas à droite, puis cliquer sur "Install" et entrer le nom du package. 
+
+---
+
+### Charger un package
+
+Pour le charger dans l'environnement de travail : toujours dans l'onglet "Packages" en bas à droite, il faut trouver le package dont nous avons besoin et cocher la case correspondante.
+
+---
+
+Une fois installé, un package n'a plus besoin d'être installé. Il faudra de temps en temps le mettre à jour ("Update"), en particulier si vous recevez un warning vous indiquant de le faire.
+
+Par contre, si un package est installé, cela ne signifie pas qu'il est chargé à chaque fois, c'est-à-dire que ses fonctions sont accessibles. Cela, il faudra le faire à chaque nouvelle session de travail.
 
 ----
 
@@ -41,7 +57,6 @@ Pour le charger : onglet "Packages" en bas à droite > cocher la case correspond
 ### Charger un jeu de données pré-enregistré
 
 ```{r}
-library(tidyr)
 library(questionr)
 data("hdv2003")
 ```
@@ -52,8 +67,10 @@ Ce choix est inspiré du toujours excellent guide de Julien Barnier, à la page 
 
 ### Description
 
+La fonction `head` permet de n'afficher que les premières lignes d'un vecteur ou d'un tableau.
+
 ```{r}
-hdv2003
+head(hdv2003)
 ```
 
 ### Description
@@ -67,32 +84,26 @@ str(hdv2003)
 ### Accéder aux variables
 
 ```{r}
-hdv2003$qualif
+head(hdv2003$qualif)
+```
+----
+
+### Accéder aux variables
+
+```{r}
+head(hdv2003$age)
 ```
 
 ---
 
 ### Accéder aux variables
 
-```{r}
-hdv2003[,2]
-```
-
-----
-
-### Accéder aux variables
+Cette fonction est équivalente à la précente, mais la syntaxe n'indique pas de quelle variable il s'agit, seulement qu'il s'agit de la deuxième variable. Ce genre d'écriture est déconseillé.
 
 ```{r}
-hdv2003$age
+head(hdv2003[,2])
 ```
 
-----
-
-### Accéder aux entrées du tableau
-
-```{r}
-hdv2003
-```
 
 ----
 
@@ -104,8 +115,10 @@ csv = "comma separated values"
 Ne pas oublier les guillemets `"..."` autour du nom du fichier.
 
 ```{r}
-library(readr)
-write_csv(x = hdv2003, "hdv2003.csv")
+library(readr)  # package pour l'importation et 
+                # l'exportation de fichiers
+
+write_csv(x = hdv2003, file = "hdv2003.csv")
 ```
 
 ----
@@ -118,7 +131,7 @@ hdv <- read_csv(file = "hdv2003.csv")
 
 ----
 
-Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouvez vous rendre dans la fenêtre en haut à droite de RStudio puis dans l'onglet "Environment". Vous trouverez le tableau sous "Data". En double-cliquant dessus, il s'ouvrira dans cette fenêtre et vous pourrez vérifier que le tableau a bien été importé (en particulier dans le cas de "parsing failures").
+Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouvez vous rendre dans la fenêtre en haut à droite de RStudio puis dans l'onglet "Environment". Vous trouverez le tableau sous "Data". En double-cliquant dessus, le tableau s'ouvrira dans cette fenêtre et vous pourrez vérifier qu'il a bien été importé (en particulier dans le cas de "parsing failures").
 
 ----
 
@@ -128,6 +141,7 @@ Pour consulter l'objet importé - dans ce cas un tableau de données - vous pouv
 xls (Microsoft Excel/libreOffice/Google Spreadsheets)
 
 * On préfère en général sauver les fichiers au format csv car ils sont ainsi beaucoup plus légers et ne transportent pas l'encodage parfois lourd d'un fichier xls.
+
 * Néanmoins, ce n'est pas toujours possible d'y échapper. Les données de l'OFS par exemple sont souvent fournies au format xls.
 
 ----
@@ -159,7 +173,9 @@ ouch
 
 ----
 
-Toutes les entrées sont considérées comme des chaînes de caractères.
+Toutes les entrées sont considérées comme des chaînes de caractères, même les entrées numériques. Les en-têtes n'ont pas été convenablement importés. Dans ce cas, il existe différentes fonctions pour "nettoyer" le tableau, mais il vaut parfois mieux traiter le tableau en amont, puis exporter les données en csv (pas recommandé si l'on travaille régulièrement avec un même type de fichier : dans ce cas, il vaut mieux trouver un moyen d'automatiser le traitement).
+
+----
 
 ```{r}
 str(ouch)
@@ -187,7 +203,9 @@ spss | package `haven`
 json | package `jsonlite`
 xml | package `xml2`
 
+---
 
+La cheat sheet *Data Import* vous sera utile : https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-import.pdf
 
 
 
@@ -198,6 +216,7 @@ xml | package `xml2`
 «Tidy data is a standard way of mapping the meaning of a dataset to its structure.» 
 
 «A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types.» 
+Il est nécessaire de présenter ses données de manière "tidy" pour pouvoir utiliser `ggplot2`.
 
 ----
 
@@ -218,14 +237,12 @@ vignette("tidy-data")
 
 Marie-Louise Timcke a proposé sur `journocode.com` [une très bonne ressource à ce sujet](https://web.archive.org/web/20170212185744/http://journocode.com/2016/03/05/r-tidy-data/).
 
-En particulier, elle présente l'exemple suivant, conçu à partir d'explications d'Hadley Wickham.
-
 
 ----
 
 Le format *tidy*, ou *long form*, est fortement recommandé dans `ggplot2`.
 
-
+Il y a une cheat sheet consacrée à la manipulation de ces objets : https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-transformation.pdf
 
 
 
@@ -237,6 +254,13 @@ Le format *tidy*, ou *long form*, est fortement recommandé dans `ggplot2`.
 http://www.springer.com/us/book/9780387245447
 
 
+## Charger les données dans ggplot
+
+**Remarque** : à partir d'ici, nous parlons principalement de ggplot sans le "2" car il va s'agir de la fonction "ggplot". 
+
+Le "2" n'est utilisé que dans le nom du package. 
+
+Et oui, ggplot1 [existe](https://github.com/hadley/ggplot1).
 
 ## Setup. 
 
@@ -287,25 +311,20 @@ On ne va garder qu'un échantillon de mille observations tirées de ce jeu de do
 diam <- diamonds[sample(1:nrow(diamonds), 1000),]
 ```
 
-## Charger les données dans ggplot
-
-**Remarque** : à partir d'ici, nous parlons principalement de ggplot sans le "2" car il va s'agir de la fonction "ggplot". 
-
-Le "2" n'est utilisé que dans le nom du package. 
-
-Et oui, ggplot1 [existe](https://github.com/hadley/ggplot1).
 
 ----
 
 ### On charge les données
 
-*Attention ! L'input doit toujours être un data frame !*
+*Attention ! L'input dans la fonction `ggplot` doit toujours être un data frame !*
 
 ```{r}
 g <- ggplot(diam)
 ```
 
 ----
+
+RStudio a bien identifié que nous avions chargé un tableau de données, mais ne sait pas quoi en faire. Au moins il n'y a pas de message d'erreur : on est sur la bonne voie.
 
 ```{r}
 g
@@ -319,28 +338,21 @@ Juste un grand carré gris.
 
 ----
 
-Le résultat avec le package `base`.
+Le résultat avec les packages pré-installés `base` et `graphics` (enlever les commentaires pour voir).
 
 ```{r}
 ## plot(diamonds)
 ```
 
-
-----
-
 La commande de base `plot(diamonds)` considère toutes les variables du data frame et les croise entre elles - numériques comme ordinales - pour un résultat illisible et inutile.
 
-Qu'obtient-on avec la commande `ggplot` ?
+----
+
+Pour avoir un aperçu des différences entre les options de base et `ggplot2` pour les représentations graphiques.
 
 ----
 
-```{r}
-str(g)
-```
-
-----
-
-On retrouve le data frame contenant nos données, ainsi que les différents éléments propres à l'approche *grammaticale* des graphiques proposée par `ggplot2`, pour l'instant vides :
+Voici les différents éléments propres à l'approche *grammaticale* des graphiques proposée par `ggplot2`, pour l'instant vides :
 
 * layers
 
@@ -373,6 +385,8 @@ cf. figure suivante.
 
 Pour rappel : 'carat' et 'price' sont des variables continues.
 
+`ggplot` arrive à représenter les échelles sur les axes.
+
 ----
 
 ```{r}
@@ -389,15 +403,12 @@ On remarque que les échelles et les labels des axes sont déjà posés.
 
 ### Avec une géométrie mais sans mapping
 
-Pas de figure...
+Dans ce cas, pas de figure car il manque un mapping.
 
 ```{r, error = TRUE}
 ggplot(diam) + geom_point()
 ```
 
-----
-
-Cette fois, ggplot n'a pas trouvé de mapping lui indiquant où poser son dessin, d'où l'erreur.
 
 ----
 
@@ -409,6 +420,8 @@ ggplot(diam, aes(x = carat, y = price)) + geom_point()
 
 ----
 
+Il s'agit de l'exemple le plus simple que nous pouvons produire.
+
 Pour comparaison, la commande la plus simple permettant d'obtenir (à peu près) le même résultat avec le package de base.
 
 ```{r}
@@ -417,13 +430,13 @@ plot(diam$carat, diam$price)
 
 ----
 
-Les échelles sont justes et les points sont bien situés, mais c'est tout et c'est moche.
+Les échelles sont justes et les points sont bien situés, mais c'est tout et l'esthétique est datée.
 
 ----
 
-C'est là le principe de ggplot : à partir de maintenant nous pouvons faire varier les éléments graphiques sans avoir à toucher aux données.
+C'est là le principe de ggplot : à partir de maintenant nous pouvons faire varier les éléments graphiques sans avoir à toucher aux données. Nous chargeons une seule fois le jeu de données, et ensuite nous pouvons nommer les variables directement, sans avoir à utiliser le symbole dollar.
 
-Par exemple, une interpolation.
+Par exemple, dessinons une interpolation.
 
 ----
 
@@ -433,7 +446,7 @@ ggplot(diam, aes(x = carat, y = price)) + geom_smooth()
 
 ## Superposer des layers
 
-Il suffit de les additionner pour les superposer.
+Il suffit d'additionner des layers pour les superposer.
 
 **Attention** au '+' à mettre à la fin de la ligne et pas au début.
 
@@ -447,7 +460,7 @@ ggplot(diam, aes(x = carat, y = price)) +
 
 ----
 
-Attention, l'ordre des géométries a une influence sur le graphique !
+L'ordre des géométries a une influence sur le graphique.
 
 ----
 
@@ -497,11 +510,16 @@ ggplot(diam) + geom_point(aes(x = carat, y = price))
 
 ----
 
-Bref, on peut mapper de nombreuses variables, en une seule fois, directement dans `ggplot` et elles seront reprises par les autres éléments. 
+Nous verrons plus tard un exemple montrant quels effets peuvent avoir ces différents choix de mappings.
+
+----
+
+
+On peut mapper de nombreuses variables, en une seule fois, directement dans `ggplot` et elles seront reprises par les autres éléments. 
 
 Par exemple, l'attribut `color` de `geom_point`. 
 
-*Remarque* : la variable 'clarity' est ordinale.
+*Remarque* : ici, la variable 'clarity' est ordinale, `ggplot` fournit donc une palette de couleurs ordonnées.
 
 ----
 
@@ -536,6 +554,26 @@ ggplot(diam, aes(x = carat, y = price)) +
 
 On trouve toutes les géométries disponibles ainsi que de nombreuses autres ressources indispensables dans l'**indispensable** [cheat sheet de ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) !
 
+---- 
+
+Le lieu où se fait le mapping peut avoir une influence. Les Remarquez la différence entre les deux graphiques suivants.
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  geom_smooth()
+```
+
+----
+
+
+```{r}
+ggplot(diam, aes(x = carat, y = price)) + 
+  geom_point(aes(color = clarity)) +
+  geom_smooth()
+```
+
+
 ----
 
 ### Variables et transformations, discrètes et continues
@@ -558,65 +596,6 @@ Toutefois, il est recommandé d'appliquer une transformation continue (`size`) �
 ```{r}
 ggplot(diam, aes(x = carat, y = price, color = clarity, shape = cut)) + 
   geom_point()
-```
-
-----
-
-Détail qui a son importance dans l'exemple suivant : la fonction `geom_smooth` va hériter du mapping sur la couleur.
-
-*Note* : "se = FALSE" empêche l'affichage de l'incertitude.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() + 
-  geom_smooth(se = FALSE)
-```
-
-----
-
-Pour le mapping sur la forme (au lieu de la couleur), on repassera.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, shape = cut)) + 
-  geom_point() + 
-  geom_smooth(se = FALSE)
-```
-
-----
-
-Et si l'on prend en considération les deux en même temps, ça peut mener à la catastrophe.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity, shape = cut)) + 
-  geom_point() + 
-  geom_smooth(se = FALSE)
-```
-
-----
-
-Le même code que précédemment, avec cette fois le graphique à la place du message d'erreur.
-
-```{r, warning = FALSE}
-ggplot(diam, aes(x = carat, y = price, color = clarity, shape = cut)) + 
-  geom_point() + geom_smooth(se = FALSE)
-```
-
-----
-
-Il est nécessaire de redistribuer le mapping plus subtilement.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point(aes(shape = cut)) + 
-  geom_smooth(se = FALSE)
 ```
 
 ----
@@ -693,16 +672,17 @@ ggplot(diam, aes(x = carat, y = price, color = clarity, size = depth)) +
 
 ----
 
-Au passage, la modification du titre en légende dépend de la fonction `scale` correspondante (ici `scale_size`).
+Au passage, la modification du titre en légende dépend de la fonction `scale` correspondante (ici `scale_size`). La clarté dépend du mapping sur la couleur (d'où l'emploi de `scale_color_discrete`, car c'est une variable discrète).
 
-C'est logique, mais contre-intuitif pour qui aura passé beaucoup (trop ?) de temps avec les commandes graphiques de base dans R.
+C'est logique, mais contre-intuitif pour qui aura passé beaucoup de temps avec les commandes graphiques de base dans R.
 
 ----
 
 ```{r}
 ggplot(diam, aes(x = carat, y = price, color = clarity, size = depth)) + 
   geom_point() + 
-  scale_size("DEPTH", range = c(1,3))
+  scale_size("DEPTH", range = c(1,3)) +
+  scale_color_discrete("Clarté")
 ```
 
 ## Bilan intermédiaire
@@ -714,372 +694,4 @@ Nous avons vu comment :
 * Faire un mapping.
 
 * Superposer une ou plusieurs géométries.
-
-----
-
-Il nous reste à découvrir :
-
-* Le facettage.
-
-* Les échelles.
-
-* Les annotations.
-
-* Les types de graphiques autres que les *scatterplots*.
-
-* Comment sauver un graphique.
-
-* Comment bien préparer ses données.
-
-## Le facettage
-
-Attention ! Ceci s'applique à des variables discrètes.
-
-Le facettage divise le jeu de données en fonction des catégories d'une variable.
-
-Dans un sens… 
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price)) + 
-  geom_point() +
-  facet_grid(. ~ cut) 
-```
-
-----
-
-… et dans l'autre.
-
-(Remarquez la position inversée de la variable `cut` dans `facet_grid()`.)
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price)) + 
-  geom_point() +
-  facet_grid(cut ~ .) 
-```
-
-----
-
-En croisant deux variables discrètes.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price)) + 
-  geom_point() +
-  facet_grid(color ~ clarity) 
-```
-
-----
-
-Finalement, en croisant deux variables discrètes, avec un mapping sur la couleur.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = cut)) + 
-  geom_point() +
-  facet_grid(color ~ clarity) 
-```
-
-----
-
-Il y a une autre option de facettage lorsqu'on n'utilise qu'une seule variable discrète : `facet_wrap`.
-
-Dans ce cas, remarquez que nous n'utilisons plus le point (.) avant le tilde (~).
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price)) + 
-  geom_point() +
-  facet_wrap(~ clarity) 
-```
-
-
-## Les échelles
-
-Elles commencent toutes par `scale_`
-
-Ensuite, on complète avec le nom de la variable concernée.
-
-----
-
-
-scale_alpha scale_alpha_continuous scale_alpha_discrete scale_alpha_identity scale_alpha_manual scale_color_brewer scale_color_continuous scale_color_discrete scale_color_distiller scale_color_gradient scale_color_gradient2 scale_color_gradientn scale_color_grey scale_color_hue scale_color_identity scale_color_manual scale_colour_brewer scale_colour_continuous scale_colour_date scale_colour_datetime scale_colour_discrete scale_colour_distiller scale_colour_gradient scale_colour_gradient2 scale_colour_gradientn scale_colour_grey scale_colour_hue scale_colour_identity scale_colour_manual scale_continuous scale_date scale_fill_brewer scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_discrete scale_fill_distiller scale_fill_gradient scale_fill_gradient2 scale_fill_gradientn scale_fill_grey scale_fill_hue scale_fill_identity scale_fill_manual scale_identity scale_linetype scale_linetype_continuous scale_linetype_discrete scale_linetype_identity scale_linetype_manual scale_manual scale_radius scale_shape scale_shape_continuous scale_shape_discrete scale_shape_identity scale_shape_manual scale_size scale_size_area scale_size_continuous scale_size_date scale_size_datetime scale_size_discrete scale_size_identity scale_size_manual scale_x_continuous scale_x_date scale_x_datetime scale_x_discrete scale_x_log10 scale_x_reverse scale_x_sqrt scale_y_continuous scale_y_date scale_y_datetime scale_y_discrete scale_y_log10	scale_y_reverse scale_y_sqrt
-
-----
-
-Par exemple, si l'on travaille sur la couleur, on pourra faire varier la palette des couleurs en modifiant le nom de l'échelle. Faites le test en écrivant `scale_color_` dans la console puis en pressant sur la touche tab pour voir les suggestions…
-
-----
-
-En gris 
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  scale_color_grey()
-```
-
-----
-
-La version par défaut.
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  scale_color_discrete()
-```
-
-----
-
-ColorBrewer, nommée d'après une de ses auteurs, Cnythia Brewer, est une librairie de couleurs précalculées qui s'accordent bien.
-
-On peut les utiliser ici avec la fonction `scale_color_brewer`.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  scale_color_brewer()
-```
-
-----
-
-En changeant de palette.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  scale_color_brewer(palette = 2)
-```
-
-----
-
-Attention si vous utilisez la mauvaise échelle : soit il ne se passera rien (comme dans la figure suivante), soit il y aura un message d'erreur.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  scale_fill_brewer(palette = 2)
-```
-
-----
-
-Dans la figure suivante, nous changeons la forme utilisée pour dessiner les points afin qu'il y ait un pourtour (`color`) et un contenu (`fill`).
-
-Cette transformation a été effectuée en donnant comme instruction que les points doivent changer de forme (indépendamment de toute variable).
-
-Nous en profitons pour dessiner l'intérieur. Quelle fonction faut-il utiliser ?
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, fill = clarity)) + 
-  geom_point(shape = 21) +
-  scale_fill_brewer(palette = 2)
-```
-
-----
-
-Mais les échelles, ça ne concerne pas seulement l'intérieur du graphique.
-
-Nous utilisons également des échelles sur les axes.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() + 
-  scale_x_continuous(breaks = c(1,3), minor_breaks = c(sqrt(2), pi)) +
-  scale_y_continuous(breaks = sample(20000, 10))
-```
-
-----
-
-Échelle logarithmique FTW.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() + 
-  scale_y_log10()
-```
-
-
-## Les annotations
-
-Via un mapping, par exemple pour un MDS.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, label = clarity)) + 
-  geom_text()
-```
-
-----
-
-L'annotation manuelle est possible, à l'ancienne, mais pas forcément recommandée.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  annotate("text", x = 3.5, y = 10000, label = "HELLO")
-```
-
-
-## D'autres types de graphiques
-
-C'est la seule fois que nous voyons une transformation statistique dans cette présentation (malheureusement).
-
-Ce sont les fonctions commençant par `stat_`.
-
-Pour plus d'infos, voir la cheat sheet.
-
-----
-
-```{r}
-ggplot(diam, aes(price)) +
-  geom_area(stat = "bin")
-```
-
-----
-
-```{r}
-ggplot(diam, aes(price)) +
-  geom_density(kernel = "gaussian")
-```
-
-----
-
-```{r}
-ggplot(diam, aes(price)) +
-  geom_histogram(binwidth = 30)
-```
-
-----
-
-Avec une variable discrète, cette fois.
-
-```{r}
-ggplot(diam, aes(color)) +
-  geom_bar()
-```
-
-----
-
-Une variable discrète et une variable continue.
-
-```{r}
-ggplot(diam, aes(x = color, y = price)) +
-  geom_boxplot()
-```
-
-----
-
-Deux variables discrètes.
-
-```{r}
-ggplot(diam, aes(x = cut, y = color)) +
-  geom_count()
-```
-
-----
-
-```{r}
-ggplot(diamonds, aes(x=price, fill=cut)) + 
-  geom_histogram()
-```
-
-----
-
-Distributions bi-variées.
-
-```{r}
-ggplot(diamonds, aes(carat, price)) +
-  geom_bin2d(binwidth = c(0.25, 500))
-```
-
-----
-
-```{r}
-ggplot(diamonds, aes(carat, price)) +
-  geom_hex()
-```
-
-
-
-
-
-## Les thèmes
-
-La fonction `ggtitle` est utilisée pour choisir un titre.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() + 
-  ggtitle("Mon joli graphique")
-```
-
-----
-
-Et, classique pour une fois, `xlab` et `ylab` pour changer les noms des axes.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() + 
-  xlab("Ma jolie abscisse") + 
-  ylab("Ma jolie ordonnée")
-```
-
-----
-
-Pour varier les thèmes : `theme_`.
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  theme_bw()
-```
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  theme_dark()
-```
-
-----
-
-```{r}
-ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
-  geom_point() +
-  theme_minimal()
-```
-
-## Pour exporter un graphique : `ggsave`
-
-Par exemple 
-
-`ggsave("plot.pdf", width = 7, height = 7)`
 
