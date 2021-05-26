@@ -1,0 +1,538 @@
+---
+title: "Introduction à R (quatrième partie)"
+author: "Yannick Rochat (yannick.rochat@epfl.ch)"
+date: "26 mai 2021"
+output:
+    html_document
+---
+
+## Plan du cours
+
+* ggplot2, fin
+* Shiny
+
+
+
+## Bilan intermédiaire
+
+Nous avons vu comment :
+
+* Charger les données.
+
+* Faire un mapping.
+
+* Superposer une ou plusieurs géométries.
+
+----
+
+Il nous reste à découvrir :
+
+* Le facettage.
+
+* Les échelles.
+
+* Les annotations.
+
+* Les types de graphiques autres que les *scatterplots*.
+
+* Comment sauver un graphique.
+
+* Comment bien préparer ses données.
+
+---
+
+### On reprend un échantillon du jeu de données des diamants.
+
+```{r}
+library(ggplot2)
+diam <- diamonds[sample(1:nrow(diamonds), 1000),]
+```
+
+
+
+## Le facettage
+
+Attention ! Ceci s'applique à des variables discrètes.
+
+Le facettage divise le jeu de données en fonction des catégories d'une variable.
+
+Dans un sens… 
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price)) + 
+  geom_point() +
+  facet_grid(. ~ cut) 
+```
+
+----
+
+… dans l'autre …
+
+Remarquez la nouvelle position de la variable `cut` dans `facet_grid()`.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price)) + 
+  geom_point() +
+  facet_grid(cut ~ .) 
+```
+
+----
+
+… ou en croisant ces deux variables discrètes.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price)) + 
+  geom_point(size = .5) +
+  facet_grid(color ~ clarity) 
+```
+
+----
+
+Finalement, en croisant deux variables discrètes, avec un mapping sur la couleur. 
+
+Attention dans la fonction qui suit à ne pas confondre `color` comme argument de `aes` avec `color` comme variable du tableau de données.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = cut)) + 
+  geom_point(size = .5) +
+  facet_grid(color ~ clarity) 
+```
+
+----
+
+Il y a une autre option de facettage lorsqu'on n'utilise qu'une seule variable discrète : `facet_wrap`.
+
+Dans ce cas, remarquez que nous n'utilisons plus le point (.) avant le tilde (~).
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price)) + 
+  geom_point() +
+  facet_wrap(~ clarity) 
+```
+
+
+## Les échelles
+
+Ces fonctions commencent toutes par `scale_`
+
+Ensuite, on complète avec le nom de la variable concernée.
+
+Quelques exemples en vrac…
+
+----
+
+
+scale_alpha scale_alpha_continuous scale_alpha_discrete scale_alpha_identity scale_alpha_manual scale_color_brewer scale_color_continuous scale_color_discrete scale_color_distiller scale_color_gradient scale_color_gradient2 scale_color_gradientn scale_color_grey scale_color_hue scale_color_identity scale_color_manual scale_colour_brewer scale_colour_continuous scale_colour_date scale_colour_datetime scale_colour_discrete scale_colour_distiller scale_colour_gradient scale_colour_gradient2 scale_colour_gradientn scale_colour_grey scale_colour_hue scale_colour_identity scale_colour_manual scale_continuous scale_date scale_fill_brewer scale_fill_continuous scale_fill_date scale_fill_datetime scale_fill_discrete scale_fill_distiller scale_fill_gradient scale_fill_gradient2 scale_fill_gradientn scale_fill_grey scale_fill_hue scale_fill_identity scale_fill_manual scale_identity scale_linetype scale_linetype_continuous scale_linetype_discrete scale_linetype_identity scale_linetype_manual scale_manual scale_radius scale_shape scale_shape_continuous scale_shape_discrete scale_shape_identity scale_shape_manual scale_size scale_size_area scale_size_continuous scale_size_date scale_size_datetime scale_size_discrete scale_size_identity scale_size_manual scale_x_continuous scale_x_date scale_x_datetime scale_x_discrete scale_x_log10 scale_x_reverse scale_x_sqrt scale_y_continuous scale_y_date scale_y_datetime scale_y_discrete scale_y_log10	scale_y_reverse scale_y_sqrt
+
+----
+
+Par exemple, si l'on travaille sur la couleur, on pourra faire varier la palette des couleurs en modifiant le nom de l'échelle. Faites le test en écrivant `scale_color_` dans la console puis en pressant sur la touche tab pour voir les suggestions…
+
+Dans de nombreux cas, il faut que le type d'échelle corresponde au type de données.
+
+----
+
+En gris 
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  scale_color_grey()
+```
+
+----
+
+La version par défaut, pour une variable discrète.
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  scale_color_discrete()
+```
+
+----
+
+ColorBrewer, nommée d'après une de ses auteurs, Cnythia Brewer, est une librairie de couleurs précalculées qui s'accordent bien.
+
+On peut les utiliser ici avec la fonction `scale_color_brewer`.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  scale_color_brewer()
+```
+
+----
+
+En changeant de palette.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  scale_color_brewer(palette = 2)
+```
+
+----
+
+Attention si vous utilisez la mauvaise échelle : soit il ne se passera rien (comme dans la figure suivante, qui affiche les couleurs par défaut), soit il y aura un message d'erreur.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  scale_fill_brewer(palette = 2)
+```
+
+----
+
+Dans la figure suivante, nous changeons la forme utilisée pour dessiner les points afin qu'il y ait un pourtour (`color`) et un contenu (`fill`).
+
+Cette transformation a été effectuée en donnant comme instruction que les points doivent changer de forme (indépendamment de toute variable).
+
+Nous en profitons pour dessiner l'intérieur. Quelle fonction faut-il utiliser ?
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, fill = clarity)) + 
+  geom_point(shape = 21) +
+  scale_fill_brewer(palette = 2)
+```
+
+----
+
+Mais les échelles, ça ne concerne pas seulement l'intérieur du graphique.
+
+Nous utilisons également des échelles sur les axes.
+
+Dans l'exemple suivant, nous mettons en évidence quelques valeurs sur les axes au hasard afin d'illustrer le fonctionnement de ces fonctions.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() + 
+  scale_x_continuous(breaks = c(.5, 1.5, 2.5, 3.5, 4.5), minor_breaks = c(1, 2, 3, 4, 5)) +
+  scale_y_continuous(breaks = sample(20000, 10))
+```
+
+----
+
+Un exemple avec une échelle logarithmique
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() + 
+  scale_y_log10()
+```
+
+
+## Les annotations
+
+Via un mapping, par exemple pour un MDS.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, label = clarity)) + 
+  geom_text()
+```
+
+----
+
+L'annotation manuelle est possible, à l'ancienne, mais pas forcément recommandée.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  annotate("text", x = 3.5, y = 10000, label = "HELLO")
+```
+
+
+## D'autres types de graphiques
+
+C'est la seule fois que nous voyons une transformation statistique dans cette présentation.
+
+Ce sont les fonctions commençant par `stat_`.
+
+Pour plus d'infos, voir la cheat sheet.
+
+----
+
+```{r}
+ggplot(diam, aes(price)) +
+  geom_area(stat = "bin")
+```
+
+----
+
+```{r}
+ggplot(diam, aes(price)) +
+  geom_density(kernel = "gaussian")
+```
+
+----
+
+```{r}
+ggplot(diam, aes(price)) +
+  geom_histogram(binwidth = 30)
+```
+
+----
+
+Avec une variable discrète, cette fois.
+
+```{r}
+ggplot(diam, aes(color)) +
+  geom_bar()
+```
+
+----
+
+Une variable discrète et une variable continue.
+
+```{r}
+ggplot(diam, aes(x = color, y = price)) +
+  geom_boxplot()
+```
+
+----
+
+Deux variables discrètes.
+
+```{r}
+ggplot(diam, aes(x = cut, y = color)) +
+  geom_count()
+```
+
+----
+
+Un histogramme tenant compte d'une variable discrète.
+
+```{r}
+ggplot(diamonds, aes(x=price, fill=cut)) + 
+  geom_histogram()
+```
+
+----
+
+Distributions bi-variées.
+
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_bin2d(binwidth = c(0.25, 500))
+```
+
+----
+
+Ici, le package `hexbin` est nécessaire.
+
+```{r}
+library(hexbin)
+ggplot(diamonds, aes(carat, price)) +
+  geom_hex()
+```
+
+
+
+
+
+## Les thèmes
+
+La fonction `ggtitle` est utilisée pour choisir un titre.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() + 
+  ggtitle("Mon graphique")
+```
+
+----
+
+Et, classique pour une fois, `xlab` et `ylab` pour changer les noms des axes.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() + 
+  xlab("Mon abscisse") + 
+  ylab("Mon ordonnée")
+```
+
+----
+
+Pour varier les thèmes : `theme_`.
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  theme_bw()
+```
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  theme_dark()
+```
+
+----
+
+```{r}
+ggplot(diam, aes(x = carat, y = price, color = clarity)) + 
+  geom_point() +
+  theme_minimal()
+```
+
+## Pour exporter un graphique : `ggsave`
+
+Par exemple 
+
+`ggsave("plot.pdf", width = 7, height = 7)`
+
+
+
+## Shiny !
+
+Shiny est un package permettant de créer des visualisations interactives.
+
+On trouve un [tutorial](https://shiny.rstudio.com/tutorial/) (vidéo et écrit), ainsi que des articles et des exemples sur un site qui lui est consacré : https://shiny.rstudio.com/
+
+---
+
+Bien sûr, il y a une cheat sheet pour Shiny.
+
+https://github.com/rstudio/cheatsheets/raw/master/shiny.pdf
+
+---
+
+### Deux exemples en Suisse
+
+La Swiss National Covid-19 Science Task Force [utilise Shiny ](https://ibz-shiny.ethz.ch/covid-19-re-international/) pour calculer le taux de reproduction.
+
+Le site de statistiques de hockey sur glace [NL Ice Data](https://nlicedata.com/) utilise également Shiny pour représenter autant des données numériques que visuelles, ou faire usage de modèles prédictifs.
+
+---
+
+Des exemples "pro" sont disponibles sur le site de Shiny.
+
+https://shiny.rstudio.com/gallery/
+
+Personnellement, j'aime beaucoup l'application ["Movie Explorer"](https://shiny.rstudio.com/gallery/movie-explorer.html).
+
+---
+
+Notez qu'avec l'onglet "Get Code", vous pouvez accéder au code source de l'application et découvrir comment elle a été construite.
+
+Elle apparaît [dans un dossier d'exemples](https://github.com/rstudio/shiny-examples) régulièrement mis à jour. N'hésitez pas à aller les consulter.
+
+---
+
+N'oubliez pas d'installer Shiny puis de le charger avant de lancer les exemples suivants.
+
+```{r}
+library(shiny)
+```
+
+---
+
+Une longue liste d'exemples est mise à disposition. Elle permet de découvrir et tester de nombreux aspects de Shiny.
+
+
+
+```{r}
+runExample()
+```
+
+
+Commençons par l'exemple de base.
+
+---
+
+`faithful` est un jeu de données décrivant des éruptions du "Old Faithful geyser" (durée et temps d'attente) dans le parc national états-uniens Yellowstone. 
+
+```{r}
+faithful
+```
+
+
+--- 
+
+```{r}
+x    <- faithful$waiting
+
+bins <- seq(min(x), max(x), length.out = 30)
+
+hist(x, breaks = bins, col = "#75AADB", border = "white",
+     xlab = "Waiting time to next eruption (in mins)",
+     main = "Histogram of waiting times")
+```
+
+---
+
+On souhaite pouvoir faire varier la largeur des classes de cet histogramme.
+
+
+```{r eval = FALSE}
+runExample("01_hello")
+```
+
+---
+
+On utilise par convention `ui` pour "user interface". C'est ici que l'on "dessine" notre application. Les interactions et le fonctionnement sont gérés dans `server`. Le plus souvent, on les sauvegarde dans deux fichiers séparés portant ces noms.
+
+Remarquez dans l'exemple l'usage de l'expression `input$` pour décrire un élément interactif. 
+
+Dans `server`, `input$bins` fait référence au slider `bins` apparaissant dans `ui`. C'est ainsi que chaque fois que le slider est actualisé, le graphique est actualisé à son tour.
+
+
+## Référence principale (et récente) sur Shiny…
+
+… que je vous invite à consulter (et acquérir ?) :
+
+Mastering Shiny, par Hadley Wickham
+
+https://mastering-shiny.org/
+
+Au passage, un excellent exemple de mise en forme d'un livre avec les outils fournis par R.
+
+
+## Travail à 1 crédit ECTS
+
+*Objectifs*
+
+Dans un notebook… 
+
+1. Sélectionner un jeu de données.
+2. Dans un notebook, importer ce jeu de données et le mettre au format tidy.
+3. Préparer une application Shiny permettant de visualiser ce jeu de données avec `ggplot2`.
+4. Rédiger une micro-analyse de ce jeu de données (un à deux paragraphes) ainsi qu'un retour d'expérience sur l'utilisation de Shiny et `ggplot2` (min. un paragraphe).
+5. M'envoyer par email dans un fichier `.zip` l'application et le rapport.
+
+
+*Date du rendu* : avant la fin du mois de juin (ou à convenir).
